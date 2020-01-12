@@ -1,7 +1,7 @@
 #-- Exercise 1
 
 defmodule Introduction do
-
+#------- Functions
   def mult(_, 0) do 0 end
   def mult(n, m) do
     n + mult(n, m - 1)
@@ -101,6 +101,29 @@ defmodule Introduction do
   def fib(n) do
     fib(n-1) + fib(n-2)
   end
+
+#------- Sorting
+  # insertion sort
+  def insertion_srt([]), do: []
+  def insertion_srt(list) when is_list(list) do
+    insertion_srt(list, [])
+  end
+  def insertion_srt([], res) when is_list(res), do: res
+  def insertion_srt([h | t], []) do
+    insertion_srt(t, [h])
+  end
+  def insertion_srt([c1 | t1], list = [c2 | t2]) do
+    insertion_srt(t1, insertion_srt(c1, list))
+  end
+  # loops through sorted list and finds spot for input element
+  def insertion_srt(c1, []) when is_number(c1), do: [c1]
+  def insertion_srt(c1, list = [h | t]) when is_number(c1) do
+    if c1 == h || h < c1 do
+      [h] ++ insertion_srt(c1, t)
+    else
+      [c1, h | t]
+    end
+  end
 end
 
 #IO.puts Intro.mult(3, 4)
@@ -112,10 +135,11 @@ end
 #IO.puts "sum of all elements in list: #{sum}"
 #IO.inspect Intro.duplicate([2, 5, 1, 1])
 #IO.inspect Intro.add(6, [2, 5, 1, 1])
-#IO.inspect Intro.remove(2, [2, 5, 1, 1])
+#IO.inspect Intro.remove(2, [2, 5, 1s, 1])
 #IO.inspect Intro.unique([:a, :b, :a, :d, :a, :b, :b, :a])
 #IO.inspect Intro.pack([:a, :a, :b, :c, :b, :a, :c])
 #IO.inspect Intro.reverse([:a, :a, :b, :c, :b, :a, :c])
 #IO.inspect Intro.to_binary(5)
-IO.puts Introduction.to_integer([1, 0, 1])
-IO.puts Introduction.fib(7)
+#IO.puts Introduction.to_integer([1, 0, 1])
+#IO.puts Introduction.fib(7)
+IO.inspect Introduction.insertion_srt([0, 6, 7, 4, 2, 8, 5, 6])
