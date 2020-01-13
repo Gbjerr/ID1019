@@ -102,29 +102,67 @@ defmodule Introduction do
     fib(n-1) + fib(n-2)
   end
 
+
 #------- Sorting
   # insertion sort
   def insertion_srt([]), do: []
-  def insertion_srt(list) when is_list(list) do
-    insertion_srt(list, [])
-  end
+  def insertion_srt(list) when is_list(list), do: insertion_srt(list, [])
+
   def insertion_srt([], res) when is_list(res), do: res
-  def insertion_srt([h | t], []) do
-    insertion_srt(t, [h])
-  end
-  def insertion_srt([c1 | t1], list = [c2 | t2]) do
+  def insertion_srt([h | t], []), do: insertion_srt(t, [h])
+  def insertion_srt([c1 | t1], list = [c2 | t2]), do:
     insertion_srt(t1, insertion_srt(c1, list))
-  end
+
   # loops through sorted list and finds spot for input element
-  def insertion_srt(c1, []) when is_number(c1), do: [c1]
-  def insertion_srt(c1, list = [h | t]) when is_number(c1) do
+  def insertion_srt(c1, []), do: [c1]
+  def insertion_srt(c1, list = [h | t]) do
     if c1 == h || h < c1 do
       [h] ++ insertion_srt(c1, t)
     else
       [c1, h | t]
     end
   end
+
+  # quick sort
+  def quick_srt([]), do: []
+  def quick_srt(list = [piv | tail]) when is_list(list), do: partition(piv, tail)
+
+  def partition(piv, []), do: [piv]
+  def partition(piv, list = [h | tail]), do:
+    quick_srt(get_lesser(piv, list)) ++ [piv] ++ quick_srt(get_greater(piv, list))
+  # support function for quicksort, retrieves list of elments lesser than pivot
+  def get_lesser(piv, []), do: []
+  def get_lesser(piv, [h | t]), do:
+    res = (if h < piv, do: [h], else: []) ++ get_lesser(piv, t)
+  # support function for quicksort, retrieves list of elments greater than pivot
+  def get_greater(piv, []), do: []
+  def get_greater(piv, [h | t]), do:
+    res = (if h >= piv, do: [h], else: []) ++ get_greater(piv, t)
+
+
+
+
+  # merge sort
+  def merge_srt([]), do: []
+  def merge_srt([x]), do: [x]
+  def merge_srt(list) when is_list(list) do
+    {splitted1, splitted2} = Enum.split(list, div(length(list), 2))
+    merge(merge_srt(splitted1), merge_srt(splitted2))
+  end
+
+  # merges two lists
+  def merge([], []), do: []
+  def merge([], list = [h | t]), do: list
+  def merge(list = [h | t], []), do: list
+  def merge(list1 = [h1 | t1], list2 = [h2 | t2]) do
+    if h1 < h2, do: [h1] ++ merge(t1, list2), else: [h2] ++ merge(list1, t2)
+  end
+
+
+
 end
+
+
 
 #IO.puts Intro.mult(3, 4)
 #IO.puts Intro.exp(3, 4)
@@ -136,10 +174,14 @@ end
 #IO.inspect Intro.duplicate([2, 5, 1, 1])
 #IO.inspect Intro.add(6, [2, 5, 1, 1])
 #IO.inspect Intro.remove(2, [2, 5, 1s, 1])
-#IO.inspect Intro.unique([:a, :b, :a, :d, :a, :b, :b, :a])
+#IO.inspect Intro.unique([:a, :b, :a, :Sd, :a, :b, :b, :a])
 #IO.inspect Intro.pack([:a, :a, :b, :c, :b, :a, :c])
 #IO.inspect Intro.reverse([:a, :a, :b, :c, :b, :a, :c])
 #IO.inspect Intro.to_binary(5)
 #IO.puts Introduction.to_integer([1, 0, 1])
 #IO.puts Introduction.fib(7)
-IO.inspect Introduction.insertion_srt([0, 6, 7, 4, 2, 8, 5, 6])
+#IO.inspect Introduction.insertion_srt([7, 0, 6, 7, 4, 2, 8, 5, 6])
+#IO.inspect Introduction.quick_srt([7, 0, 6, 7, 4, 2, 8, 5, 6])
+IO.inspect Introduction.merge_srt([7, 0, 6, 7, 4, 2, 8, 5, 6])
+#IO.inspect Introduction.get_lesser(5, [7, 0, 6, 7, 4, 2, 8, 5, 6])
+#IO.inspect Introduction.get_greater(5, [7, 0, 6, 7, 4, 2, 8, 5, 6])
