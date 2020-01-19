@@ -6,7 +6,7 @@ defmodule Trains do
   def test do
     init_state = {main = [:a, :b, :c], first = [], second = []}
     #updated_state = Moves.single({:one, 1}, init_state)
-    new_state = Moves.move([{:one, 1}, {:two, 1}, {:two, -1}, {:one, -1}], init_state)
+    new_state = Moves.move([{:one, 1}, {:two, 1}, {:two, -1}, {:one, -1}], init_state) 
   end
 
 end

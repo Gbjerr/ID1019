@@ -1,4 +1,5 @@
 #--- Exercise 2
+# Derivatives of different sorts, done by pattern matching with the help of atoms
 
 defmodule Derivative do
   @type literal() :: {:const, number()} | {:const, atom()}
@@ -91,7 +92,7 @@ defmodule Derivative do
   end
 
   # reduces two constants in addition, to one as sum of both. Reduces expressions
-  # whether a constant/s zero in addition.
+  # whether one or both counterparts is zero in addition.
   def untangle({:add, a, b}) do
     s1 = untangle(a)
     s2 = untangle(b)
