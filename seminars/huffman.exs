@@ -1,18 +1,15 @@
+#--- Seminar 1 huffman coding
+# task was to implement the huffman compression algorithm, that maps each letter
+# and its with a binary based on the letters frequency using a huffman tree
+
 defmodule Huffman do
 
-  def main do
-
-  end
   def sample do
     'the quick brown fox jumps over the lazy dog
     this is a sample text that we will use when we build
     up a table we will only handle lower case letters and
     no punctuation symbols the frequency will of course not
     represent english but it is probably not that far off'
-  end
-
-  def some_text do
-    'lllll'
   end
 
   def text() do
@@ -23,10 +20,10 @@ defmodule Huffman do
     sample = sample()
     tree = tree(sample)
     encode = encode_table(tree)
-    #decode = decode_table(tree)
-    #text = text()
-    #seq = encode(text, encode)
-    #decode(seq, decode)
+    decode = decode_table(tree)
+    text = text()
+    seq = encode(text, encode)
+    decode(seq, decode)
   end
 
   def tree(sample) do
@@ -34,39 +31,58 @@ defmodule Huffman do
     huffman(freq)
   end
 
-
+  # function goes through each word in a list, adding count for every occurrence
+  # and sorts list in the end
   def freq(sample), do: freq(sample, [])
   def freq([], freq), do: Support.insertion_srt(freq)
   def freq([ch | rest], freq), do: freq(rest, count(ch, freq))
 
+  # adds one to counter if word is found in our frequency list
   def count(ch, []), do: [{ch, 1}]
   def count(ch, [{ch, occurrence} | rest]), do: [{ch, occurrence + 1} | rest]
   def count(ch, [{not_this, occurence} | rest]), do: [{not_this, occurence} | count(ch, rest)]
 
+  # takes two smallest frequencies, makes them one node by adding both frequencies
+  # and puts into list
   def huffman([tree]), do: tree
-  def huffman(list = [{c1, f1}, {c2, f2} | rest]) do
+  def huffman([{c1, f1}, {c2, f2} | rest]) do
     huffman(Support.insert({{c1, c2}, f1 + f2}, rest))
   end
 
-  def encode_table(tree), do: encode_table(tree, [])
+  def encode_table(tree), do: get_codes(tree, [])
 
-  def encode_table({a, b}, direction), do:
-    encode_table(a, [0 | direction]) ++ encode_table(b, [1 | direction])
+  def decode_table(tree), do: get_codes(tree, [])
 
-  def encode_table(a, code), do:
-  [{a, Enum.reverse(code)}]
+  # goes through every possible leaf and records the path with 0's and 1's to get there
+  def get_codes({a, b}, direction), do:
+    get_codes(a, [0 | direction]) ++ get_codes(b, [1 | direction])
+  def get_codes(a, code), do: [{a, Enum.reverse(code)}]
+
+  def encode([], table), do: []
+  def encode([ch | rest], table), do: contains(ch, table) ++ encode(rest, table)
+
+  def contains(ch, []), do: []
+  def contains(ch, [{ch, code} | rest]), do: code
+  def contains(ch, [{not_this, _} | rest]), do: contains(ch, rest)
 
 
-  def decode_table(tree) do
-    # To implement...
+  def decode([], _), do: []
+
+  def decode(seq, table) do
+    {char, rest} = decode_char(seq, 1, table)
+    [char | decode(rest, table)]
   end
 
-  def encode(text, table) do
-  # To implement...
-  end
+  # extracts letters from decode table based on the binary code
+  def decode_char(seq, n, table) do
+    {code, rest} = Enum.split(seq, n)
+    case List.keyfind(table, code, 1) do
+      {ch, code} ->
+        {ch, rest}
+      nil ->
+        decode_char(seq, n + 1, table)
+    end
 
-  def decode(seq, tree) do
-  # To implement...
   end
 
 end
